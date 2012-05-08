@@ -1,0 +1,27 @@
+<?php
+
+namespace JawHare\Database;
+abstract class Database
+{
+	private $conns = array();
+	private $settings = array();
+
+	public function __construct($settings)
+	{
+		$this->settings = $settings;
+
+		$this->connect();
+
+		if (empty(self::$instance))
+			self::$instance = $this;
+	}
+
+	abstract protected function query($query, $replacements = array(), $conn = 'host');
+	abstract public function insert($table, $columns, $data, $querytype = 'insert', $conn = 'insert');
+	abstract protected function connect($set = 'all', $select_db = true, $reconnect = false);
+
+	public function select($query, $replacements = array(), $conn = 'select')
+	{
+		return $this->query($query, $replacements, $conn);
+	}
+}

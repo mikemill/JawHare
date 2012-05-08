@@ -1,0 +1,8 @@
+<?php
+
+if (!isset($ini))
+	$ini = array();
+
+$ini += array(
+	'class_dir' => '/var/httpd/framework/includes',
+);
