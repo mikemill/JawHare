@@ -3,11 +3,6 @@
 namespace JawHare\Database;
 class DatabaseMySQL extends Database
 {
-	private $conns = array();
-	private $settings = array();
-
-	static private $instance = null;
-
 	public function __construct($settings)
 	{
 		$this->settings = $settings;
@@ -114,10 +109,5 @@ class DatabaseMySQL extends Database
 			else
 				$this->conns[$type] = $this->conns['host'];
 		}
-	}
-
-	static public function instance()
-	{
-		return self::$instance;
 	}
 }
