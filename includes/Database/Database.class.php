@@ -3,8 +3,8 @@
 namespace JawHare\Database;
 abstract class Database
 {
-	private $conns = array();
-	private $settings = array();
+	protected $conns = array();
+	protected $settings = array();
 
 	public function __construct($settings)
 	{
