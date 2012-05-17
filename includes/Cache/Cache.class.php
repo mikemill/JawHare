@@ -1,6 +1,6 @@
 <?php
 
-namespace JawHare;
+namespace JawHare\Cache;
 
 interface Cache
 {
