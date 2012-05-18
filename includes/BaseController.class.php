@@ -74,7 +74,7 @@ class BaseController
 							break;
 
 						case 'hexstring':
-							$valid = preg_match('~^[a-zA-Z0-9]*$~', $input[$name]) > 0;
+							$valid = preg_match('~^[a-fA-F0-9]*$~', $input[$name]) > 0;
 							break;
 
 						case 'exists':
