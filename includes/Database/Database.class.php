@@ -11,9 +11,6 @@ abstract class Database
 		$this->settings = $settings;
 
 		$this->connect();
-
-		if (empty(self::$instance))
-			self::$instance = $this;
 	}
 
 	abstract protected function query($query, $replacements = array(), $conn = 'host');

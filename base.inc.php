@@ -15,7 +15,8 @@ namespace JawHare
 		{
 			$class = str_replace('JawHare\\', '', $class_name);
 			$filename = $ini['class_dir'] . '/' . str_replace('\\', '/', $class) . '.class.php';
-			require_once $filename;
+			if (file_exists($filename))
+				include_once $filename;
 		}
 	});
 
