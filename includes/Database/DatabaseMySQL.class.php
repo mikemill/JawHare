@@ -23,6 +23,8 @@ class DatabaseMySQL extends Database
 					return '"' . mysql_real_escape_string((string) $value) . '"';
 				case 'sqlid':
 					return '`' . (string) $value . '`';
+				case 'int':
+					return (string) (int) $value;
 			}
 
 			return $matches[0];
@@ -34,11 +36,6 @@ class DatabaseMySQL extends Database
 			die('Error: ' . mysql_error() ."\n\nQuery:\n$query\n\nSQL:\n$sql\n\n");
 
 		return new DatabaseMySQLResult($result, $this->conns[$conn], $sql);
-	}
-
-	public function select($query, $replacements = array(), $conn = 'select')
-	{
-		return $this->query($query, $replacements, $conn);
 	}
 
 	public function insert($table, $columns, $data, $querytype = 'insert', $conn = 'insert')
