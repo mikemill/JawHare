@@ -1,0 +1,15 @@
+<phpunit bootstrap="./bootstrap.php">
+	<testsuites>
+		<testsuite name="Library Test Suite">
+			<directory>./includes</directory>
+		</testsuite>
+    </testsuites>
+	
+	<filter>
+		<!-- This isn't necessary, just let it in as placeholder.
+        <whitelist>
+            <directory suffix=".php">../conf</directory>
+        </whitelist>
+        -->
+    </filter>
+</phpunit>
