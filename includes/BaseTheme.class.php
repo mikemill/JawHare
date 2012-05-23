@@ -20,6 +20,9 @@ class BaseTheme
 	protected $cssfiles = array();
 	protected $rawcss = array();
 
+	protected $lang = 'english';
+
+
 	public function __construct($viewdir)
 	{
 		$this->viewdir = $viewdir;
@@ -34,6 +37,18 @@ class BaseTheme
 		else
 		{
 			$this->title = $title;
+		}
+	}
+
+	public function lang($lang = null)
+	{
+		if ($lang === null)
+		{
+			return $this->lang;
+		}
+		else
+		{
+			$this->lang = $lang;
 		}
 	}
 
@@ -149,6 +164,11 @@ class BaseTheme
 		return $this->viewdir . "/$dir/{$view}.tpl";
 	}
 
+	protected function lang_filename($view, $dir, $lang)
+	{
+		return $this->viewdir . "/{$dir}_languages/$view.$lang.php";
+	}
+
 	protected function view_exists($view)
 	{
 		$dirs = array(
@@ -166,7 +186,7 @@ class BaseTheme
 		return false;
 	}
 
-	protected function load_view($view, $dir = null, $variables = null)
+	protected function load_view($view, $dir = null, $variables = null, $load_lang = true)
 	{
 		if ($view == '')
 			return;
@@ -186,6 +206,13 @@ class BaseTheme
 
 		extract($variables);
 
+		// Check for languages
+		if ($load_lang)
+		{
+			if (file_exists($this->lang_filename($view, $dir, $this->lang)))
+				require_once $this->lang_filename($view, $dir, $this->lang);
+		}
+		
 		require_once $this->view_filename($view, $dir);
 	}
 
