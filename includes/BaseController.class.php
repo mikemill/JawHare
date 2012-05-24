@@ -11,6 +11,7 @@ class BaseController
 	protected $db = null;
 	protected $ini = null;
 	protected $auth = null;
+	protected $sess = null;
 
 	protected $theme = null;
 
@@ -24,6 +25,7 @@ class BaseController
 
 	static protected $load_db = true;
 	static protected $load_cache = true;
+	static protected $load_session = true;
 
 	public function __construct($objects = array())
 	{
@@ -170,12 +172,18 @@ class BaseController
 		if (self::$load_cache)
 			$db = Database($ini['database']);
 		else
-			$cache = null;
+			$db = null;
+
+		if (self::$load_session)
+			$sess = Session($ini['session']);
+		else
+			$sess = null;
 
 		$objects = array(
 			'cache' => $cache,
 			'db' => $db,
 			'ini' => $ini,
+			'sess' => $sess,
 		);
 
 		foreach ($passed_objects AS $obj => $val)

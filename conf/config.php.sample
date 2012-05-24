@@ -1,8 +1,33 @@
 <?php
+$default_ini = array(
+	'database' => array(
+		'class' => '\JawHare\Database\DatabaseMySQL',
+		'host' => '',
+		'user' => '',
+		'password' => '',
+		'db' => '',
+	),
+	'class_dir' => realpath(dirname(__FILE__) . '/../includes'),
+	'cache' => array(
+		'class' => '\\JawHare\\Cache\\CacheMemcached',
+		'server' => 'localhost',
+		'port' => 11211,
+	),
+	'session' => array(
+		'class' => '\\JawHare\\Session\\Session',
+	),
+	'jawhare_dir' => realpath(dirname(__FILE__) . '/../'),
+);
 
 if (!isset($ini))
-	$ini = array();
+	$ini = $default_ini;
+else
+	foreach ($default_ini AS $key => $val)
+	{
+		if (!isset($ini[$key]))
+			$ini[$key] = $val;
+		elseif (is_array($val))
+			$ini[$key] = array_merge($val, $ini[$key]);
+	}
 
-$ini += array(
-	'class_dir' => '/var/httpd/framework/includes',
-);
+unset($default_ini);
