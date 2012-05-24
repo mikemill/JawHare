@@ -16,4 +16,5 @@ abstract class UserStorage extends DatabaseStorage
 	abstract public function load_user_by_username($name);
 	abstract public function create_user($data);
 	abstract public function update_user($data);
+	abstract public function get_admins();
 }

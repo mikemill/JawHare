@@ -66,4 +66,17 @@ class UserStorageMySQL extends UserStorage
 			$data,
 			'write');		
 	}
+
+	public function get_admins()
+	{
+		return $this->db->query('
+			SELECT {array_identifiers:cols}
+			FROM users
+			WHERE admin = ' . $this->colSQLID('admin'),
+			array(
+				'cols' => array_keys($this->columns),
+				'admin' => true,
+			)
+		);
+	}
 }

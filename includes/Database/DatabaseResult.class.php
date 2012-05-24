@@ -9,4 +9,5 @@ interface DatabaseResult
 	public function row();
 	public function affected_rows();
 	public function insert_id();
+	public function seek($row);
 }

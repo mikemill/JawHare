@@ -38,4 +38,9 @@ class DatabaseMySQLResult implements DatabaseResult
 	{
 		return mysql_insert_id($this->link);
 	}
+
+	public function seek($row)
+	{
+		return mysql_data_seek($this->resource, $row);
+	}
 }

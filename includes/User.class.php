@@ -11,12 +11,19 @@ class User
 
 	public function __construct($id = null)
 	{
-		$this->id = $id;
-
 		$this->storage = Database()->loadStorage('User');
 
-		if ($this->id !== null)
-			$this->load();
+		if (is_array($id))
+		{
+			$this->load_from_array($id);
+		}
+		else
+		{
+			$this->id = $id;
+
+			if ($this->id !== null)
+				$this->load();
+		}
 	}
 
 	protected function load_from_array($array)
@@ -155,5 +162,12 @@ class User
 			$this->hashed_pw = $this->data['passwd'] = $this->hashpw($val);
 			return $this;
 		}
+	}
+
+	static public function get_admins()
+	{
+		$result = Database()->loadStorage('User')->get_admins();
+
+		return new Collection($result, get_called_class());
 	}
 }
