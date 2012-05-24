@@ -3,6 +3,8 @@
 namespace JawHare\Database;
 class DatabaseMySQL extends Database
 {
+	protected $dbtypename = 'MySQL';
+
 	public function __construct($settings)
 	{
 		$this->settings = $settings;
@@ -10,7 +12,7 @@ class DatabaseMySQL extends Database
 		$this->connect();
 	}
 
-	protected function query($query, $replacements = array(), $conn = 'host')
+	public function query($query, $replacements = array(), $conn = 'host')
 	{
 		$sql = preg_replace_callback('~\{([a-zA-Z_\-0-9]+):([a-zA-Z_\-0-9]+)\}~', function($matches) use ($replacements)
 		{
@@ -23,8 +25,15 @@ class DatabaseMySQL extends Database
 					return '"' . mysql_real_escape_string((string) $value) . '"';
 				case 'sqlid':
 					return '`' . (string) $value . '`';
+				case 'array_identifiers':
+					foreach ($value AS &$val)
+						$val = '`' . (string) $val . '`';
+					unset($val);
+					return implode(', ', $value);
 				case 'int':
 					return (string) (int) $value;
+				case 'bool':
+					return ((bool) $value) ? '1' : '0';
 			}
 
 			return $matches[0];
@@ -38,13 +47,16 @@ class DatabaseMySQL extends Database
 		return new DatabaseMySQLResult($result, $this->conns[$conn], $sql);
 	}
 
-	public function insert($table, $columns, $data, $querytype = 'insert', $conn = 'insert')
+	public function insert($table, $columns, $data, $querytype = 'insert', $conn = 'write')
 	{
 		$replacements = array(
 			'table' => $table,
 		);
 		$columnnames = array_keys($columns);
+		$columnnamesrev = array_flip($columnnames);
 		$columntypes = array_values($columns);
+
+		echo '<pre>'; print_r($columns); print_r($columnnames); print_r($columnnamesrev); print_r($data); die('</pre>');
 
 		$colcount = count($columns);
 
@@ -77,13 +89,19 @@ class DatabaseMySQL extends Database
 				$sql .= ',';
 		}
 
+		die("<hr><pre>$sql<hr>" . print_r($replacements, true) . "</pre>");
+
 		return $this->query($sql, $replacements, $conn);
+	}
+
+	public function update($table, $columns, $data, $conn = 'write')
+	{
 	}
 
 	protected function connect($set = 'all', $select_db = true, $reconnect = false)
 	{
 		if ($set == 'all')
-			$set = array('host', 'select', 'insert');
+			$set = array('host', 'select', 'write');
 		elseif (!is_array($set))
 			$set = array($set);
 

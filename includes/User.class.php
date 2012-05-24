@@ -6,13 +6,28 @@ class User
 	protected $id;
 	protected $hashed_pw = '';
 	protected $data = array();
+	protected $storage = null;
+	protected $dirty = false;
 
 	public function __construct($id = null)
 	{
 		$this->id = $id;
 
+		$this->storage = Database()->loadStorage('User');
+
 		if ($this->id !== null)
 			$this->load();
+	}
+
+	protected function load_from_array($array)
+	{
+		foreach ($array AS $data => $value)
+		{
+			$this->data[$data] = $value;
+		}
+
+		$this->hashed_pw = $this->data['passwd'];
+		$this->id = $this->data['id_user'];
 	}
 
 	public function hashpw($pw)
@@ -51,16 +66,94 @@ class User
 		if ($id === null)
 			$id = $this->id;
 
-		$db = Database();
+		if (is_numeric($id))
+			$ret = $this->storage->load_user($id);
+		elseif (is_string($id))
+			$ret = $this->storage->load_user_by_username($id);
+		else
+			return $this;
 
-		$ret = $db->select('JawHare:User:load_user', array('id' => $id));
+		if ($ret->numrows() == 0)
+			throw new \Exception('Unable to load member');
+		$this->load_from_array($ret->assoc());
 
-		foreach ($ret->assoc() AS $data => $value)
+		return $this;
+	}
+
+	public function save()
+	{
+		if (empty($this->id))
 		{
-			$this->data[$data] = $value;
+			$ret = $this->storage->create_user($this->data);
+			$this->id($ret->insert_id());
 		}
+		else
+			$this->storage->update_user($this->data);
+	}
 
-		$this->hashed_pw = $this->data['passwd'];
-		$this->id = $this->data['id_user'];
+	public function id ($val = null)
+	{
+		if ($val === null)
+			return $this->id;
+		else
+		{
+			$this->id = $this->data['id_user'] = $val;
+			return $this;
+		}
+	}
+	
+	public function username ($val = null)
+	{
+		if ($val === null)
+			return $this->data['username'];
+		else
+		{
+			$this->data['username'] = $val;
+			return $this;
+		}
+	}
+
+	public function fullname ($val = null)
+	{
+		if ($val === null)
+			return $this->data['fullname'];
+		else
+		{
+			$this->data['fullname'] = $val;
+			return $this;
+		}
+	}
+
+	public function email ($val = null)
+	{
+		if ($val === null)
+			return $this->data['email'];
+		else
+		{
+			$this->data['email'] = $val;
+			return $this;
+		}
+	}
+
+	public function admin ($val = null)
+	{
+		if ($val === null)
+			return $this->data['admin'];
+		else
+		{
+			$this->data['admin'] = (bool) $val;
+			return $this;
+		}
+	}
+
+	public function passwd ($val = null)
+	{
+		if ($val === null)
+			return $this->data['passwd'];
+		else
+		{
+			$this->hashed_pw = $this->data['passwd'] = $this->hashpw($val);
+			return $this;
+		}
 	}
 }
