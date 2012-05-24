@@ -9,10 +9,10 @@ class UserStorageMySQL extends UserStorage
 		 return $this->db->select('
 			SELECT {array_identifiers:cols}
 			FROM users
-			WHERE id_user = ' . $this->colSQLID('username'),
+			WHERE id_user = ' . $this->colSQLID('id_user'),
 			array(
 				'cols' => array_keys($this->columns),
-				'id' => $id,
+				'id_user' => $id,
 			)
 		);
 	}

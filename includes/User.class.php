@@ -37,7 +37,7 @@ class User
 		$this->id = $this->data['id_user'];
 	}
 
-	public function hashpw($pw)
+	public function password_salt()
 	{
 		// This function uses the Blowfish algorithm with a random salt.
 		// The cost value is a balance of security and speed.  The time component increases exponentially with the cost paramaeter.
@@ -49,6 +49,13 @@ class User
 
 		$salt .= '$';
 
+		return $salt;
+	}
+
+	public function hashpw($pw, $salt = null)
+	{
+		if ($salt === null)
+			$salt = $this->password_salt();
 		return crypt($pw, $salt);
 	}
 
@@ -112,7 +119,7 @@ class User
 	public function username ($val = null)
 	{
 		if ($val === null)
-			return $this->data['username'];
+			return isset($this->data['username']) ? $this->data['username'] : null;
 		else
 		{
 			$this->data['username'] = $val;
@@ -123,7 +130,7 @@ class User
 	public function fullname ($val = null)
 	{
 		if ($val === null)
-			return $this->data['fullname'];
+			return isset($this->data['fullname']) ? $this->data['fullname'] : null;
 		else
 		{
 			$this->data['fullname'] = $val;
@@ -134,7 +141,7 @@ class User
 	public function email ($val = null)
 	{
 		if ($val === null)
-			return $this->data['email'];
+			return isset($this->data['email']) ? $this->data['email'] : null;
 		else
 		{
 			$this->data['email'] = $val;
@@ -142,10 +149,21 @@ class User
 		}
 	}
 
+	public function salt ($val = null)
+	{
+		if ($val === null)
+			return isset($this->data['salt']) ? $this->data['salt'] : null;
+		else
+		{
+			$this->data['salt'] = $val;
+			return $this;
+		}
+	}
+
 	public function admin ($val = null)
 	{
 		if ($val === null)
-			return $this->data['admin'];
+			return isset($this->data['admin']) ? $this->data['admin'] : null;
 		else
 		{
 			$this->data['admin'] = (bool) $val;
@@ -156,7 +174,7 @@ class User
 	public function passwd ($val = null)
 	{
 		if ($val === null)
-			return $this->data['passwd'];
+			return isset($this->data['passwd']) ? $this->data['passwd'] : null;
 		else
 		{
 			$this->hashed_pw = $this->data['passwd'] = $this->hashpw($val);

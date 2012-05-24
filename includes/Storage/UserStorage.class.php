@@ -11,6 +11,7 @@ abstract class UserStorage extends DatabaseStorage
 		'passwd' => 'string',
 		'email' => 'string',
 		'admin' => 'bool',
+		'salt' => 'string',
 	);
 	abstract public function load_user($id);
 	abstract public function load_user_by_username($name);
