@@ -18,6 +18,14 @@ class Authentication
 
 	public function is_logged_in($id = null)
 	{
+		if ($id === null)
+			return !empty($this->user->id());
+
+		if (is_numeric($id))
+			return $id == $this->user->id();
+		else
+			return $id == $this->user->username();
+
 	}
 
 	public function validate($password, $id = null)
@@ -80,12 +88,11 @@ class Authentication
 
 		$cookiepw = $this->user->hashpw($this->user->password(), $password_salt);
 
-
-
 		setcookie($this->cookiename, serialize(array($this->user->id(), $cookiepw)), 0, '/', $this->settings['domain'], false, true);
 	}
 
 	public function logout($id = null)
 	{
+		setcookie($this->cookiename, '', time() - 3600);
 	}
 }
