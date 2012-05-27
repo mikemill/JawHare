@@ -1,4 +1,4 @@
- CREATE TABLE `userprofile` (
+ CREATE TABLE `usersettings` (
   `id_user` int(10) unsigned NOT NULL,
   `field` varchar(20) NOT NULL,
   `value` varchar(100) NOT NULL,

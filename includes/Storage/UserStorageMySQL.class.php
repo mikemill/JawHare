@@ -80,24 +80,24 @@ class UserStorageMySQL extends UserStorage
 		);
 	}
 
-	public function load_profile($id)
+	public function load_settings($id)
 	{
-		$profile = array();
+		$settings = array();
 		$results = $this->db->query('
 			SELECT field, value
-			FROM userprofile
+			FROM usersettings
 			WHERE id_user = {int:id_user}', array('id_user' => $id));
 
 		while ($row = $results->assoc())
-			$profile[$row['field']] = $row['value'];
+			$settings[$row['field']] = $row['value'];
 
-		return $profile;
+		return $settings;
 	}
 
-	public function delete_profile($id, $fields)
+	public function delete_settings($id, $fields)
 	{
 		return $this->db->query('
-			DELETE FROM userprofile
+			DELETE FROM usersettings
 			WHERE id_user = {int:id_user}
 				AND field IN ({array_string:fields})',
 			array(
@@ -108,14 +108,14 @@ class UserStorageMySQL extends UserStorage
 		);
 	}
 
-	public function save_profile($id, $data)
+	public function save_settings($id, $data)
 	{
 		$rows = array();
 
 		foreach ($data AS $field => $value)
 			$rows[] = array($id, $field, $value);
 
-		return $this->db->insert('userprofile', array('id_user' => 'int', 'field' => 'string', 'value' => 'string'), $rows, 'replace');
+		return $this->db->insert('usersettings', array('id_user' => 'int', 'field' => 'string', 'value' => 'string'), $rows, 'replace');
 	}
 
 }

@@ -6,9 +6,9 @@ class User
 	protected $id;
 	protected $hashed_pw = '';
 	protected $data = array();
-	protected $profile = array();
-	protected $dirty_profile = array();
-	protected $delete_profile = array();
+	protected $settings = array();
+	protected $dirty_settings = array();
+	protected $delete_settings = array();
 	protected $dirty = false;
 	protected $storage = null;
 
@@ -40,9 +40,9 @@ class User
 		$this->id = $this->data['id_user'];
 	}
 
-	protected function load_profile()
+	protected function load_settings()
 	{
-		$this->profile = $this->storage->load_profile($this->id);
+		$this->settings = $this->storage->load_settings($this->id);
 	}
 
 	public function password_salt()
@@ -99,7 +99,7 @@ class User
 			throw new NoUserException;
 
 		$this->load_from_array($ret->assoc());
-		$this->load_profile();
+		$this->load_settings();
 
 		return $this;
 	}
@@ -110,34 +110,34 @@ class User
 		{
 			$ret = $this->storage->create_user($this->data);
 			$this->id($ret->insert_id());
-			$this->storage->save_profile($this->id, $this->profile);
+			$this->storage->save_settings($this->id, $this->settings);
 		}
 		else
 		{
 			if ($this->dirty)
 				$this->storage->update_user($this->data);
 
-			if (!empty($this->dirty_profile))
+			if (!empty($this->dirty_settings))
 			{
 				$data = array();
 
-				foreach (array_unique($this->dirty_profile) AS $field)
-					if (isset($this->profile[$field]))
-						$data[$field] = $this->profile[$field];
+				foreach (array_unique($this->dirty_settings) AS $field)
+					if (isset($this->settings[$field]))
+						$data[$field] = $this->settings[$field];
 
 				if (!empty($data))
-					$this->storage->save_profile($this->id, $data);
+					$this->storage->save_settings($this->id, $data);
 			}
 			
-			if (!empty($this->delete_profile))
+			if (!empty($this->delete_settings))
 			{
-				$this->storage->delete_profile($this->id, array_keys($this->delete_profile));
+				$this->storage->delete_settings($this->id, array_keys($this->delete_settings));
 			}
 		}
 
 		$this->dirty = false;
-		$this->dirty_profile = array();
-		$this->delete_profile = array();
+		$this->dirty_settings = array();
+		$this->delete_settings = array();
 	}
 
 	public function id ($val = null)
@@ -224,29 +224,29 @@ class User
 		}
 	}
 
-	public function profile ($var = null, $val = null)
+	public function settings ($var = null, $val = null)
 	{
 		if ($var === null)
-			return $this->profile;
+			return $this->settings;
 		elseif ($val === null)
-			return isset($this->profile[$var]) ? $this->profile[$var] : null;
+			return isset($this->settings[$var]) ? $this->settings[$var] : null;
 		else
 		{
-			if (!isset($this->profile[$var]) || $this->profile[$var] !== $val)
+			if (!isset($this->settings[$var]) || $this->settings[$var] !== $val)
 			{
-				$this->profile[$var] = $val;
-				$this->dirty_profile[] = $var;
+				$this->settings[$var] = $val;
+				$this->dirty_settings[] = $var;
 
-				unset($this->delete_profile[$var]);
+				unset($this->delete_settings[$var]);
 			}
 			return $this;
 		}
 	}
 
-	public function delete_profile($var)
+	public function delete_settings($var)
 	{
-		unset($this->profile[$var]);
-		$this->delete_profile[$var] = null;
+		unset($this->settings[$var]);
+		$this->delete_settings[$var] = null;
 
 		return $this;
 	}
