@@ -88,7 +88,7 @@ class User
 			return $this;
 
 		if ($ret->numrows() == 0)
-			throw new \Exception('Unable to load member');
+			throw new NoUserException;
 		$this->load_from_array($ret->assoc());
 
 		return $this;
@@ -188,4 +188,12 @@ class User
 
 		return new Collection($result, get_called_class());
 	}
+}
+
+class UserException extends \Exception
+{
+}
+
+class NoUserException extends UserException
+{
 }

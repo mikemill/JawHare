@@ -42,7 +42,7 @@ class DatabaseMySQL extends Database
 		$result = mysql_query($sql, $this->conns[$conn]);
 
 		if (!$result)
-			die('Error: ' . mysql_error() ."\n\nQuery:\n$query\n\nSQL:\n$sql\n\n");
+			throw new DatabaseException($sql, mysql_error());
 
 		return new DatabaseMySQLResult($result, $this->conns[$conn], $sql);
 	}
@@ -55,8 +55,6 @@ class DatabaseMySQL extends Database
 		$columnnames = array_keys($columns);
 		$columnnamesrev = array_flip($columnnames);
 		$columntypes = array_values($columns);
-
-		echo '<pre>'; print_r($columns); print_r($columnnames); print_r($columnnamesrev); print_r($data); die('</pre>');
 
 		$colcount = count($columns);
 
@@ -88,8 +86,6 @@ class DatabaseMySQL extends Database
 			if ($num < $datacount - 1)
 				$sql .= ',';
 		}
-
-		die("<hr><pre>$sql<hr>" . print_r($replacements, true) . "</pre>");
 
 		return $this->query($sql, $replacements, $conn);
 	}

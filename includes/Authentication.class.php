@@ -61,7 +61,7 @@ class Authentication
 			}
 			return false;
 		}
-		catch (\Exception $e)
+		catch (NoUserException $e)
 		{
 			return false;
 		}
