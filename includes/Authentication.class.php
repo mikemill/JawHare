@@ -19,7 +19,10 @@ class Authentication
 	public function is_logged_in($id = null)
 	{
 		if ($id === null)
-			return !empty($this->user->id());
+		{
+			$id = $this->user->id();
+			return !empty($id);
+		}
 
 		if (is_numeric($id))
 			return $id == $this->user->id();

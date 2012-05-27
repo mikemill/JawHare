@@ -86,3 +86,21 @@ function Settings($config = array())
 
 	return $instance;
 }
+
+function Authentication($config = null)
+{
+	static $instance = null;
+
+	if ($instance !== null)
+		return $instance;
+
+	if ($config === null || !isset($config['class']) || !class_exists($config['class']))
+	{
+		throw new \Exception('No authentication class available');
+	}
+	else
+	{
+		$instance = new $config['class']($config);
+		return $instance;
+	}
+}

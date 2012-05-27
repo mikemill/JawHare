@@ -9,7 +9,7 @@ class BaseController
 
 	protected $cache = null;
 	protected $db = null;
-	protected $ini = null;
+	protected $settings = null;
 	protected $auth = null;
 	protected $sess = null;
 
@@ -120,7 +120,7 @@ class BaseController
 	{
 		$vars['controller'] = $this;
 
-		if (file_exists($filename = $this->ini['views_dir'] . '/' . $view . '.tpl'))
+		if (file_exists($filename = $this->settings->config('views_dir') . '/' . $view . '.tpl'))
 		{
 			extract($vars);
 			require_once $filename;
@@ -131,14 +131,14 @@ class BaseController
 
 	protected function load_theme($theme = null)
 	{
-		$theme = ($theme === null || !class_exists($theme . 'Theme') ? $this->ini['theme'] : $theme) . 'Theme';
+		$theme = ($theme === null || !class_exists($theme . 'Theme') ? $this->settings->config('theme') : $theme) . 'Theme';
 
 		if (is_object($this->theme))
 		{
 			if ($this->theme instanceof $theme)
 				return;
 		}
-		$this->theme = new $theme($this->ini['views_dir']);
+		$this->theme = new $theme($this->settings->config('views_dir'));
 
 		$this->theme->add_view_var('auth', $this->auth);
 	}
@@ -182,8 +182,9 @@ class BaseController
 		$objects = array(
 			'cache' => $cache,
 			'db' => $db,
-			'ini' => $ini,
+			'settings' => new Settings($ini),
 			'sess' => $sess,
+			'auth' => Authentication($ini['authentication']),
 		);
 
 		foreach ($passed_objects AS $obj => $val)
