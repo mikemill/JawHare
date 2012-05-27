@@ -5,6 +5,7 @@ class DatabaseStorage
 {
 	protected $db = null;
 	protected $columns = array();
+	protected $table = '';
 
 	public function __construct($db)
 	{
