@@ -23,6 +23,11 @@ class DatabaseMySQL extends Database
 			{
 				case 'string':
 					return '"' . mysql_real_escape_string((string) $value) . '"';
+				case 'array_string':
+					foreach ($value AS &$val)
+						$val = '"' . mysql_real_escape_string((string) $val) . '"';
+					unset($val);
+					return implode(', ', $value);
 				case 'sqlid':
 					return '`' . (string) $value . '`';
 				case 'array_identifiers':
@@ -60,7 +65,6 @@ class DatabaseMySQL extends Database
 
 		$sql = strtoupper($querytype) . ' INTO {sqlid:table} (';
 
-		
 		foreach ($columnnames AS $num => $colname)
 		{
 			$sql .= '{sqlid:col' . $num . '}' . ($num < $colcount - 1 ? ', ' : '');

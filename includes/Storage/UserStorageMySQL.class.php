@@ -79,4 +79,43 @@ class UserStorageMySQL extends UserStorage
 			)
 		);
 	}
+
+	public function load_profile($id)
+	{
+		$profile = array();
+		$results = $this->db->query('
+			SELECT field, value
+			FROM userprofile
+			WHERE id_user = {int:id_user}', array('id_user' => $id));
+
+		while ($row = $results->assoc())
+			$profile[$row['field']] = $row['value'];
+
+		return $profile;
+	}
+
+	public function delete_profile($id, $fields)
+	{
+		return $this->db->query('
+			DELETE FROM userprofile
+			WHERE id_user = {int:id_user}
+				AND field IN ({array_string:fields})',
+			array(
+				'id_user' => $id,
+				'fields' => $fields,
+			),
+			'write'
+		);
+	}
+
+	public function save_profile($id, $data)
+	{
+		$rows = array();
+
+		foreach ($data AS $field => $value)
+			$rows[] = array($id, $field, $value);
+
+		return $this->db->insert('userprofile', array('id_user' => 'int', 'field' => 'string', 'value' => 'string'), $rows, 'replace');
+	}
+
 }

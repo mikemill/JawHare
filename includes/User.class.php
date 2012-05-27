@@ -6,8 +6,11 @@ class User
 	protected $id;
 	protected $hashed_pw = '';
 	protected $data = array();
-	protected $storage = null;
+	protected $profile = array();
+	protected $dirty_profile = array();
+	protected $delete_profile = array();
 	protected $dirty = false;
+	protected $storage = null;
 
 	public function __construct($id = null)
 	{
@@ -35,6 +38,11 @@ class User
 
 		$this->hashed_pw = $this->data['passwd'];
 		$this->id = $this->data['id_user'];
+	}
+
+	protected function load_profile()
+	{
+		$this->profile = $this->storage->load_profile($this->id);
 	}
 
 	public function password_salt()
@@ -89,7 +97,9 @@ class User
 
 		if ($ret->numrows() == 0)
 			throw new NoUserException;
+
 		$this->load_from_array($ret->assoc());
+		$this->load_profile();
 
 		return $this;
 	}
@@ -100,9 +110,34 @@ class User
 		{
 			$ret = $this->storage->create_user($this->data);
 			$this->id($ret->insert_id());
+			$this->storage->save_profile($this->id, $this->profile);
 		}
 		else
-			$this->storage->update_user($this->data);
+		{
+			if ($this->dirty)
+				$this->storage->update_user($this->data);
+
+			if (!empty($this->dirty_profile))
+			{
+				$data = array();
+
+				foreach (array_unique($this->dirty_profile) AS $field)
+					if (isset($this->profile[$field]))
+						$data[$field] = $this->profile[$field];
+
+				if (!empty($data))
+					$this->storage->save_profile($this->id, $data);
+			}
+			
+			if (!empty($this->delete_profile))
+			{
+				$this->storage->delete_profile($this->id, array_keys($this->delete_profile));
+			}
+		}
+
+		$this->dirty = false;
+		$this->dirty_profile = array();
+		$this->delete_profile = array();
 	}
 
 	public function id ($val = null)
@@ -111,6 +146,7 @@ class User
 			return $this->id;
 		else
 		{
+			$this->dirty = true;
 			$this->id = $this->data['id_user'] = $val;
 			return $this;
 		}
@@ -122,6 +158,7 @@ class User
 			return isset($this->data['username']) ? $this->data['username'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->data['username'] = $val;
 			return $this;
 		}
@@ -133,6 +170,7 @@ class User
 			return isset($this->data['fullname']) ? $this->data['fullname'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->data['fullname'] = $val;
 			return $this;
 		}
@@ -144,6 +182,7 @@ class User
 			return isset($this->data['email']) ? $this->data['email'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->data['email'] = $val;
 			return $this;
 		}
@@ -155,6 +194,7 @@ class User
 			return isset($this->data['salt']) ? $this->data['salt'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->data['salt'] = $val;
 			return $this;
 		}
@@ -166,6 +206,7 @@ class User
 			return isset($this->data['admin']) ? $this->data['admin'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->data['admin'] = (bool) $val;
 			return $this;
 		}
@@ -177,9 +218,37 @@ class User
 			return isset($this->data['passwd']) ? $this->data['passwd'] : null;
 		else
 		{
+			$this->dirty = true;
 			$this->hashed_pw = $this->data['passwd'] = $this->hashpw($val);
 			return $this;
 		}
+	}
+
+	public function profile ($var = null, $val = null)
+	{
+		if ($var === null)
+			return $this->profile;
+		elseif ($val === null)
+			return isset($this->profile[$var]) ? $this->profile[$var] : null;
+		else
+		{
+			if (!isset($this->profile[$var]) || $this->profile[$var] !== $val)
+			{
+				$this->profile[$var] = $val;
+				$this->dirty_profile[] = $var;
+
+				unset($this->delete_profile[$var]);
+			}
+			return $this;
+		}
+	}
+
+	public function delete_profile($var)
+	{
+		unset($this->profile[$var]);
+		$this->delete_profile[$var] = null;
+
+		return $this;
 	}
 
 	static public function get_admins()
