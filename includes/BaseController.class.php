@@ -103,7 +103,7 @@ class BaseController
 		}
 	}
 
-	protected function _route($action)
+	protected function route($action)
 	{
 		$func = 'action_' . $action;
 		if (is_callable(array($this, $func)))
@@ -112,7 +112,7 @@ class BaseController
 		}
 		else
 		{
-			die("Undefined action: " . $action);
+			throw new BadActionException($action);
 		}
 	}
 
@@ -141,6 +141,8 @@ class BaseController
 		$this->theme = new $theme($this->settings->config('views_dir'));
 
 		$this->theme->add_view_var('auth', $this->auth);
+
+		return $this->theme;
 	}
 
 	protected function theme($theme = null)
@@ -187,6 +189,8 @@ class BaseController
 			'auth' => Authentication($ini['authentication']),
 		);
 
+		$objects['auth']->load_user_from_cookie();
+
 		foreach ($passed_objects AS $obj => $val)
 		{
 			$objects[$obj] = $val;
@@ -204,7 +208,7 @@ class BaseController
 			$action = !empty($obj->_GET['action']) && $obj->is_valid_action($obj->_GET['action']) ? $obj->_GET['action'] : 'index';
 		}
 
-		$obj->_route($action);
+		$obj->route($action);
 
 		return $obj;
 	}

@@ -139,6 +139,8 @@ class BaseTheme
 			$this->view = $view;
 			if (is_array($view_vars))
 				$this->view_vars = array_merge($this->view_vars, $view_vars);
+
+			return $this;
 		}
 	}
 
