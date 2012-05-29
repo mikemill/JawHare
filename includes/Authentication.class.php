@@ -96,6 +96,6 @@ class Authentication
 
 	public function logout($id = null)
 	{
-		setcookie($this->cookiename, '', time() - 3600);
+		setcookie($this->cookiename, null, time() - 3600, '/', $this->settings['domain'], false, true);
 	}
 }
