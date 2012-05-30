@@ -16,6 +16,10 @@ $default_ini = array(
 	'session' => array(
 		'class' => '\\JawHare\\Session\\Session',
 	),
+	'authentication' => array(
+		'class' => '\\JawHare\\Authentication',
+		'cookie' => 'JawHareAuth',
+	),
 	'jawhare_dir' => realpath(dirname(__FILE__) . '/../'),
 );
 

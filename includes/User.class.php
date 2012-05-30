@@ -138,6 +138,8 @@ class User
 		$this->dirty = false;
 		$this->dirty_settings = array();
 		$this->delete_settings = array();
+
+		return $this;
 	}
 
 	public function id ($val = null)
@@ -249,6 +251,21 @@ class User
 		$this->delete_settings[$var] = null;
 
 		return $this;
+	}
+
+	public function get_groups()
+	{
+		return new UserGroupCollection($this, Database()->loadStorage('Group')->get_users_groups($this->id));
+	}
+
+	public function add_group($group, $primary = false)
+	{
+		if (is_object($group))
+			$groupid = $group->id();
+		else
+			$groupid = $group;
+
+		return Database()->loadStorage('Group')->add_user($groupid, $this->id, $primary);
 	}
 
 	static public function get_admins()
