@@ -13,14 +13,14 @@ class Login extends \JawHare\BaseController
 			
 	public function action_index()
 	{
-		if (empty($this->_POST['username']) || empty($this->_POST['password']))
+		if (empty($this->post['username']) || empty($this->post['password']))
 		{
 			$this->route('bad_login');
 		}
 
 		try
 		{
-			if ($this->auth->validate($this->_POST['password'], $this->_POST['username']))
+			if ($this->auth->validate($this->post['password'], $this->post['username']))
 			{
 				$this->auth->login();
 				self::redirect_exit($this->settings->config('base_url'));
@@ -42,6 +42,6 @@ class Login extends \JawHare\BaseController
 
 	protected function action_bad_login()
 	{
-		$this->load_view()->view('login', array('errors' => array('bad_login'), 'username' => isset($this->_POST['username']) ? $this->_POST['username'] : ''))->show();
+		$this->load_view()->view('login', array('errors' => array('bad_login'), 'username' => isset($this->post['username']) ? $this->post['username'] : ''))->show();
 	}
 }

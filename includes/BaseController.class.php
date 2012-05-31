@@ -2,10 +2,9 @@
 namespace JawHare;
 class BaseController
 {
-	protected $_POST = array();
-	protected $_GET = array();
-	protected $_REQUEST = array();
-	protected $_COOKIE = array();
+	protected $post = array();
+	protected $get = array();
+	protected $request = array();
 
 	protected $cache = null;
 	protected $db = null;
@@ -20,7 +19,6 @@ class BaseController
 			'action' => 'string',
 		),
 		'_POST' => array(),
-		'_COOKIE' => array(),
 	);
 
 	static protected $load_db = true;
@@ -95,12 +93,16 @@ class BaseController
 			return $ret;
 		};
 
-		foreach (array('_GET', '_POST', '_COOKIE') AS $var)
+		foreach (array('_GET', '_POST') AS $var)
 		{
 			$allowed = $this->default_parameters[$var] + (isset($this->parameters[$var]) ? $this->parameters[$var] : array());
 
-			$this->$var = $santizer($GLOBALS[$var], $allowed);
+			$prop = substr(strtolower($var), 1);
+
+			$this->$prop = $santizer($GLOBALS[$var], $allowed);
 		}
+
+		$this->request = $this->get + $this->post;
 	}
 
 	protected function route($action)
@@ -126,7 +128,7 @@ class BaseController
 			require_once $filename;
 		}
 		else
-			die("Could not load the view: $view");
+			throw new ViewException('404', $view);
 	}
 
 	protected function load_theme($theme = null)
