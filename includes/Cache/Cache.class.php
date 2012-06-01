@@ -11,6 +11,6 @@ interface Cache
 	public function get($key);
 	public function replace($key, $value, $expiration = 0);
 	public function set($key, $value, $expiration = null);
-	public function getErrorCode();
-	public function getErrorMessage();
+	public function get_error_code();
+	public function get_error_message();
 }

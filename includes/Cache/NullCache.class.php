@@ -1,6 +1,6 @@
 <?php
 
-namespace JawHare;
+namespace JawHare\Cache;
 
 class NullCache implements Cache
 {
@@ -14,6 +14,6 @@ class NullCache implements Cache
 	public function get($key) {return false;}
 	public function replace($key, $value, $expiration = 0) {return false;}
 	public function set($key, $value, $expiration = null) {return false;}
-	public function getErrorCode() { return -1; }
-	public function getErrorMessage() { return 'No cache'; }
+	public function get_error_code() { return -1; }
+	public function get_error_message() { return 'No cache'; }
 }

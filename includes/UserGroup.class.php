@@ -30,7 +30,7 @@ class UserGroup
 		else
 		{
 			$this->primary = $value;
-			Database()->loadStorage('Group')->set_user_primary($this->user->id(), $this->group->id(), $this->primary);
+			Database()->load_storage('Group')->set_user_primary($this->user->id(), $this->group->id(), $this->primary);
 			return $this;
 		}
 	}
@@ -47,7 +47,7 @@ class UserGroup
 
 	public function remove()
 	{
-		Database()->loadStorage('Group')->remove_user($this->group->id(), $this->user->id());
+		Database()->load_storage('Group')->remove_user($this->group->id(), $this->user->id());
 		return $this;
 	}
 }

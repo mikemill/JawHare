@@ -14,7 +14,7 @@ class Settings
 	{
 		$this->config = $config;
 
-		$this->settings = Database()->loadStorage('Settings')->load_settings();
+		$this->settings = Database()->load_storage('Settings')->load_settings();
 	}
 
 	public function config($var, $subindex = null)
@@ -54,7 +54,7 @@ class Settings
 
 	public function save()
 	{
-		$store = $db = Database()->loadStorage('Settings');
+		$store = $db = Database()->load_storage('Settings');
 
 		if (!empty($this->dirty_settings))
 		{

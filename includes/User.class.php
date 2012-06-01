@@ -14,7 +14,7 @@ class User
 
 	public function __construct($id = null)
 	{
-		$this->storage = Database()->loadStorage('User');
+		$this->storage = Database()->load_storage('User');
 
 		if (is_array($id))
 		{
@@ -255,7 +255,7 @@ class User
 
 	public function get_groups()
 	{
-		return new UserGroupCollection($this, Database()->loadStorage('Group')->get_users_groups($this->id));
+		return new UserGroupCollection($this, Database()->load_storage('Group')->get_users_groups($this->id));
 	}
 
 	public function add_group($group, $primary = false)
@@ -265,12 +265,12 @@ class User
 		else
 			$groupid = $group;
 
-		return Database()->loadStorage('Group')->add_user($groupid, $this->id, $primary);
+		return Database()->load_storage('Group')->add_user($groupid, $this->id, $primary);
 	}
 
 	static public function get_admins()
 	{
-		$result = Database()->loadStorage('User')->get_admins();
+		$result = Database()->load_storage('User')->get_admins();
 
 		return new Collection($result, get_called_class());
 	}

@@ -25,7 +25,7 @@ abstract class Database
 		return $this->query($query, $replacements, $conn);
 	}
 
-	public function loadStorage($class, $namespace = '\\JawHare\\Storage\\')
+	public function load_storage($class, $namespace = '\\JawHare\\Storage\\')
 	{
 		$class = $namespace . $class . 'Storage' . $this->dbtypename;
 

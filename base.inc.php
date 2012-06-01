@@ -29,7 +29,7 @@ function Cache($config = null)
 
 	if ($config === null || !isset($config['class']) || !class_exists($config['class']))
 	{
-		$instance = new NullCache();
+		$instance = new Cache\NullCache();
 		return $instance;
 	}
 	else

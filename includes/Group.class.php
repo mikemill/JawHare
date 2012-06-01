@@ -12,7 +12,7 @@ class Group
 
 	public function __construct($id = null)
 	{
-		$this->storage = Database()->loadStorage('Group');
+		$this->storage = Database()->load_storage('Group');
 
 		if (is_array($id))
 		{
