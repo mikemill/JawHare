@@ -2,19 +2,15 @@
 
 namespace JawHare\Storage;
 
-class GroupStorageMySQL extends GroupStorage
+class GroupStorageMySQL extends DatabaseStorage
 {
-	protected $table = 'groups';
-
 	public function load_group($id)
 	{
 		return $this->db->select('
-			SELECT {array_identifiers:cols}
-			FROM {sqlid:table}
-			WHERE id_group = ' . $this->colSQLID('id_group'),
+			SELECT id_group, groupname
+			FROM groups
+			WHERE id_group = {int:id_group}'
 			array(
-				'cols' => array_keys($this->columns),
-				'table' => $this->table,
 				'id_group' => $id,
 			)
 		);
@@ -23,10 +19,9 @@ class GroupStorageMySQL extends GroupStorage
 	public function create_group($name)
 	{
 		return $this->db->query('
-			INSERT INTO {sqlid:table} (groupname)
-			VALUES (' . $this->colSQLID('groupname') . ')',
+			INSERT INTO groups (groupname)
+			VALUES ({string:groupname})',
 			array(
-				'table' => $this->table,
 				'groupname' => $name,
 			), 'write');
 	}
@@ -34,11 +29,10 @@ class GroupStorageMySQL extends GroupStorage
 	public function update_group($id, $name)
 	{
 		return $this->db->query('
-			UPDATE {sqlid:table}
-			SET groupname = ' . $this->colSQLID('groupname') . '
-			WHERE id_group = ' . $this->colSQLID('id_group'),
+			UPDATE groups
+			SET groupname = {string:groupname}
+			WHERE id_group = {int:id_group}'
 			array(
-				'table' => $this->table,
 				'id_group' => $id,
 				'groupname' => $name,
 			), 'write');

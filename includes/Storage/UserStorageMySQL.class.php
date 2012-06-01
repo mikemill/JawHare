@@ -7,11 +7,10 @@ class UserStorageMySQL extends UserStorage
 	public function load_user($id)
 	{
 		 return $this->db->select('
-			SELECT {array_identifiers:cols}
+			SELECT id_user, username, fullname, passwd, email, admin, salt
 			FROM users
-			WHERE id_user = ' . $this->colSQLID('id_user'),
+			WHERE id_user = {int:id_user}',
 			array(
-				'cols' => array_keys($this->columns),
 				'id_user' => $id,
 			)
 		);
@@ -20,11 +19,10 @@ class UserStorageMySQL extends UserStorage
 	public function load_user_by_username($name)
 	{
 		 return $this->db->select('
-			SELECT {array_identifiers:cols}
+			SELECT id_user, username, fullname, passwd, email, admin, salt
 			FROM users
-			WHERE username = ' . $this->colSQLID('username'),
+			WHERE username = {string:username}',
 			array(
-				'cols' => array_keys($this->columns),
 				'username' => $name,
 			)
 		);
@@ -38,12 +36,12 @@ class UserStorageMySQL extends UserStorage
 		$colnames = array_keys($cols);
 		$coltypes = array();
 		foreach ($cols AS $name => $type)
-			$coltypes[] = $this->colSQLID($name);
+			$coltypes[] = $this->column_defs[$name];
 
 		$data['cols'] = $colnames;
 
 		return $this->db->query('
-			INSERT INTO users ({array_identifiers:cols})
+			INSERT INTO users (id_user, username, fullname, passwd, email, admin, salt)
 			VALUES (' . implode(', ', $coltypes) . ')'
 			, $data, 'write');
 	}
@@ -51,18 +49,18 @@ class UserStorageMySQL extends UserStorage
 	public function update_user($data)
 	{
 		$columns = array();
-
+	
 		foreach ($data AS $col => $val)
 		{
 			if ($col == 'id_user')
 				continue;
-			$columns[] = $col . ' = ' . $this->colSQLID($col);
+			$columns[] = $col . ' = ' . $this->column_defs[$col];
 		}
 			
 		return $this->db->query('
 			UPDATE users SET
 			' . implode(', ', $columns) . '
-			WHERE id_user = ' . $this->colSQLID('id_user'),
+			WHERE id_user = {int:id_user}',
 			$data,
 			'write');		
 	}
@@ -70,11 +68,10 @@ class UserStorageMySQL extends UserStorage
 	public function get_admins()
 	{
 		return $this->db->query('
-			SELECT {array_identifiers:cols}
+			SELECT id_user, username, fullname, passwd, email, admin, salt
 			FROM users
-			WHERE admin = ' . $this->colSQLID('admin'),
+			WHERE admin = {bool:admin}',
 			array(
-				'cols' => array_keys($this->columns),
 				'admin' => true,
 			)
 		);
@@ -86,7 +83,9 @@ class UserStorageMySQL extends UserStorage
 		$results = $this->db->query('
 			SELECT field, value
 			FROM usersettings
-			WHERE id_user = {int:id_user}', array('id_user' => $id));
+			WHERE id_user = {int:id_user}',
+			array('id_user' => $id)
+		);
 
 		while ($row = $results->assoc())
 			$settings[$row['field']] = $row['value'];

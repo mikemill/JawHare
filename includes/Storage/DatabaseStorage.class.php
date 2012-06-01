@@ -4,16 +4,14 @@ namespace JawHare\Storage;
 class DatabaseStorage
 {
 	protected $db = null;
-	protected $columns = array();
-	protected $table = '';
-
-	public function __construct($db)
+	protected $cache = null;
+	public function __construct($db, $cache = null)
 	{
 		$this->db = $db;
-	}
-
-	protected function colSQLID($col)
-	{
-		return '{' . $this->columns[$col] . ':' . $col . '}';
+		
+		if ($cache === null)
+			$this->cache = \JawHare\Cache();
+		else
+			$this->cache = $cache;
 	}
 }

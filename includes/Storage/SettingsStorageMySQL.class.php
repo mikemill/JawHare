@@ -11,16 +11,18 @@ class SettingsStorageMySQL extends SettingsStorage
 		foreach ($data AS $var => $value)
 			$rows[] = array($var, $value);
 
-		return $this->db->insert($this->table, $this->columns, $rows, 'replace');
+		return $this->db->insert('settings', array(
+			'variable' => 'string',
+			'value' => 'string',
+		), $rows, 'replace');
 	}
 
 	public function delete_settings($variables)
 	{
 		return $this->db->query('
-			DELETE FROM {sqlid:table}
+			DELETE FROM settings
 			WHERE variable IN ({array_string:variables})',
 			array(
-				'table' => $this->table,
 				'variables' => $variables,
 			),
 			'write'
@@ -30,13 +32,8 @@ class SettingsStorageMySQL extends SettingsStorage
 	public function load_settings()
 	{
 		$results = $this->db->query('
-			SELECT {array_identifiers:cols}
-			FROM {sqlid:table}',
-			array(
-				'cols' => array_keys($this->columns),
-				'table' => $this->table,
-			)
-		);
+			SELECT variable, value
+			FROM settings');
 
 		$ret = array();
 

@@ -4,7 +4,7 @@ namespace JawHare\Storage;
 
 abstract class UserStorage extends DatabaseStorage
 {
-	protected $columns = array(
+	protected $column_defs = array(
 		'id_user' => 'int',
 		'username' => 'string',
 		'fullname' => 'string',
@@ -13,8 +13,6 @@ abstract class UserStorage extends DatabaseStorage
 		'admin' => 'bool',
 		'salt' => 'string',
 	);
-
-	protected $table = 'users';
 
 	abstract public function load_user($id);
 	abstract public function load_user_by_username($name);
