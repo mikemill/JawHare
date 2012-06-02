@@ -9,7 +9,7 @@ class GroupStorageMySQL extends DatabaseStorage
 		return $this->db->select('
 			SELECT id_group, groupname
 			FROM groups
-			WHERE id_group = {int:id_group}'
+			WHERE id_group = {int:id_group}',
 			array(
 				'id_group' => $id,
 			)
@@ -31,7 +31,7 @@ class GroupStorageMySQL extends DatabaseStorage
 		return $this->db->query('
 			UPDATE groups
 			SET groupname = {string:groupname}
-			WHERE id_group = {int:id_group}'
+			WHERE id_group = {int:id_group}',
 			array(
 				'id_group' => $id,
 				'groupname' => $name,
