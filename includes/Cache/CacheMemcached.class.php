@@ -1,5 +1,9 @@
 <?php
 namespace JawHare\Cache;
+
+/**
+ * Memcached cache object. 
+ */
 class CacheMemcached extends \Memcached implements Cache
 {
 	public function __construct($ini = null)
@@ -16,6 +20,6 @@ class CacheMemcached extends \Memcached implements Cache
 		return parent::set($key, $value, is_null($expiration) ? 86400 : $expiration);
 	}
 
-	public function get_error_code() { return $this->getResultCode(); }
-	public function get_error_message() { return $this->getResultMessage(); }
+	public function error_code() { return $this->getResultCode(); }
+	public function error_message() { return $this->getResultMessage(); }
 }

@@ -1,7 +1,15 @@
 <?php
+/**
+ * @package JawHare
+ * @license BSD
+ * @link https://github.com/mikemill/JawHare 
+ */
 
 namespace JawHare;
 
+/**
+ * Collection for User Groups 
+ */
 class UserGroupCollection extends Collection
 {
 	protected $user;
@@ -12,6 +20,10 @@ class UserGroupCollection extends Collection
 		$this->user = $user;
 	}
 
+	/**
+	 * Gets the next User Group.  Returns false if there are no more.
+	 * @return boolean|\JawHare\UserGroup 
+	 */
 	public function next()
 	{
 		$array = $this->result->assoc();

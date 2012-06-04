@@ -94,10 +94,6 @@ class DatabaseMySQL extends Database
 		return $this->query($sql, $replacements, $conn);
 	}
 
-	public function update($table, $columns, $data, $conn = 'write')
-	{
-	}
-
 	protected function connect($set = 'all', $select_db = true, $reconnect = false)
 	{
 		if ($set == 'all')

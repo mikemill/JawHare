@@ -1,7 +1,15 @@
 <?php
+/**
+ * @package JawHare
+ * @license BSD
+ * @link https://github.com/mikemill/JawHare 
+ */
 
 namespace JawHare;
 
+/**
+ * Exception class for view problems 
+ */
 class ViewException extends \Exception
 {
 	protected $view = '';

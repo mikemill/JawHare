@@ -1,7 +1,15 @@
 <?php
+/**
+ * @package JawHare
+ * @license BSD
+ * @link https://github.com/mikemill/JawHare 
+ */
 
 namespace JawHare;
 
+/**
+ *	User Collection 
+ */
 class UserCollection extends Collection
 {
 	public function __construct($results)

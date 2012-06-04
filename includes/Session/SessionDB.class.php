@@ -1,8 +1,15 @@
 <?php
 namespace JawHare\Session;
 
+/**
+ * Store the session in the database 
+ */
 class SessionDB extends Session
 {
+	/**
+	 * The database object
+	 * @var \JawHare\Database\Database
+	 */
 	protected $db = null;
 
 	public function __construct()
@@ -72,7 +79,6 @@ class SessionDB extends Session
 
 	protected function write ($session_id , $session_data)
 	{
-		global $db_conn;
 		$this->db->query("REPLACE INTO sessions (session_id, data) VALUES ({string:session_id}, {string:data})", array('session_id' => $session_id, 'data' => $session_data));
 
 		return true;

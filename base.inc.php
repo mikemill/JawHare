@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package JawHare
+ * @license BSD
+ * @link https://github.com/mikemill/JawHare 
+ */
 
 namespace JawHare;
 
@@ -6,7 +11,6 @@ namespace JawHare;
 require_once 'conf/config.php';
 
 // Create and autolaoder for the framework.
-// Note that the order of these two matters so that the module can overwrite the framework objects if it wishes
 spl_autoload_register(function($class_name)
 {
 	global $ini;
@@ -20,6 +24,11 @@ spl_autoload_register(function($class_name)
 	}
 });
 
+/**
+ * Retrieve or create the Cache object
+ * @param array|null $config
+ * @return \JawHare\Cache\Cache
+ */
 function Cache($config = null)
 {
 	static $instance = null;
@@ -39,6 +48,12 @@ function Cache($config = null)
 	}
 }
 
+/**
+ * Retrieve or create the Database object
+ * @param array|null $config
+ * @return \JawHare\Database\Database
+ * @throws \Exception 
+ */
 function Database($config = null)
 {
 	static $instance = null;
@@ -57,6 +72,12 @@ function Database($config = null)
 	}
 }
 
+/**
+ * Retrieve or create the Session object
+ * @param array|null $config
+ * @return \JawHare\Database\Database
+ * @throws \Exception 
+ */
 function Session($config = null)
 {
 	static $instance = null;
@@ -75,6 +96,11 @@ function Session($config = null)
 	}
 }
 
+/**
+ * Retrieve or create the Settings object
+ * @param array|null $config
+ * @return \JawHare\Settings 
+ */
 function Settings($config = array())
 {
 	static $instance = null;
@@ -87,6 +113,12 @@ function Settings($config = array())
 	return $instance;
 }
 
+/**
+ * Retrieve or create the Authentication object
+ * @param array|null $config
+ * @return \JawHare\Authentication
+ * @throws \Exception 
+ */
 function Authentication($config = null)
 {
 	static $instance = null;

@@ -1,10 +1,24 @@
 <?php
 
 namespace JawHare\Storage;
+
+/**
+ * Generic storage from the database
+ */
 class DatabaseStorage
 {
+	/**
+	 * Database object
+	 * @var \JawHare\Database\Database
+	 */
 	protected $db = null;
+	
+	/**
+	 * Cache object
+	 * @var \JawHare\Cache\Cache
+	 */
 	protected $cache = null;
+	
 	public function __construct($db, $cache = null)
 	{
 		$this->db = $db;
