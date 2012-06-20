@@ -1,0 +1,10 @@
+<?php
+$ini = array(
+	'database' => array(
+		'class' => '\JawHare\Database\DatabaseMySQL',
+		'host' => '',
+		'user' => '',
+		'password' => '',
+		'db' => '',
+	),
+);

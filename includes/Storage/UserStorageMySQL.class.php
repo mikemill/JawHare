@@ -30,18 +30,20 @@ class UserStorageMySQL extends UserStorage
 
 	public function create_user($data)
 	{
-		$cols = $this->columns;
+		$cols = $this->column_defs;
 		unset($cols['id_user']);
 
-		$colnames = array_keys($cols);
 		$coltypes = array();
 		foreach ($cols AS $name => $type)
-			$coltypes[] = $this->column_defs[$name];
+		{
+			if (!isset($data[$name]))
+				$data[$name] = '';
 
-		$data['cols'] = $colnames;
+			$coltypes[] = '{' . $type . ':' . $name .'}';
+		}
 
 		return $this->db->query('
-			INSERT INTO users (id_user, username, fullname, passwd, email, admin, salt)
+			INSERT INTO users (username, fullname, passwd, email, admin, salt)
 			VALUES (' . implode(', ', $coltypes) . ')'
 			, $data, 'write');
 	}
@@ -54,9 +56,9 @@ class UserStorageMySQL extends UserStorage
 		{
 			if ($col == 'id_user')
 				continue;
-			$columns[] = $col . ' = ' . $this->column_defs[$col];
+			$columns[] = $col . ' = {' . $this->column_defs[$col] . ':' . $col . '}';
 		}
-			
+
 		return $this->db->query('
 			UPDATE users SET
 			' . implode(', ', $columns) . '

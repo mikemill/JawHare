@@ -94,6 +94,7 @@ class User
 
 		$this->hashed_pw = $this->data['passwd'];
 		$this->id = $this->data['id_user'];
+		$this->data['admin'] = (bool)$this->data['admin'];
 	}
 
 	/**
@@ -196,6 +197,9 @@ class User
 	 */
 	public function save()
 	{
+		if (empty($this->data['username']))
+			throw new InvalidUserException;
+
 		if (empty($this->id))
 		{
 			$ret = $this->storage->create_user($this->data);
@@ -406,6 +410,14 @@ class User
 	 */
 	public function add_group($group, $primary = false)
 	{
+		var_dump($this->id); die;
+		if (empty($this->id))
+			throw new InvalidUserException;
+		else
+		{
+			
+		}
+
 		if (is_object($group))
 			$groupid = $group->id();
 		else
@@ -437,5 +449,13 @@ class UserException extends \Exception
  * Exception for when trying to load a particular user but they don't exist. 
  */
 class NoUserException extends UserException
+{
+}
+
+/**
+ * Exception for when trying to perform an action on an invalid user.
+ * Example:  Creating a new user without a username.
+ */
+class InvalidUserException extends UserException
 {
 }
