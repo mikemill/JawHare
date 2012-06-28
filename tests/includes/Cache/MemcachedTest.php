@@ -15,7 +15,7 @@ class CacheMemcachedTest extends \PHPUnit_Framework_TestCase
 		if (empty($ini['cache']['Memcached']))
 			$this->markTestSkipped('No Memcached configuration');
 
-		$this->obj = Cache($ini['cache']['Memcached']);
+		$this->obj = new Cache\CacheMemcached($ini['cache']['Memcached']);
 	}
 
 	public function testIO()
