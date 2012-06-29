@@ -7,4 +7,11 @@ $ini = array(
 		'password' => '',
 		'db' => '',
 	),
+	'cache' => array(
+		'Memcached' => array(
+			'class' => '\\JawHare\\Cache\\CacheMemcached',
+			'server' => 'localhost',
+			'port' => 11211,
+		),
+	),
 );

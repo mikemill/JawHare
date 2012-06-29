@@ -89,7 +89,7 @@ class BaseController
 	);
 
 	/**
-	 * Whether or not to load the database object
+	 * Whether or not to load the database object.
 	 * @var bool
 	 */
 	static protected $load_db = true;
@@ -277,7 +277,7 @@ class BaseController
 		else
 			$cache = null;
 
-		if (self::$load_cache)
+		if (self::$load_db)
 			$db = Database($ini['database']);
 		else
 			$db = null;
